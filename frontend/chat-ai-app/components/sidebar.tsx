@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth-context"
 import { MessageSquare, Upload, LogOut, BarChart3 } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
+
 
 export function Sidebar() {
   const { logout, user } = useAuth()
+  const router = useRouter()
   const pathname = usePathname()
 
   const navItems = [
@@ -15,6 +17,16 @@ export function Sidebar() {
     { href: "/upload", icon: Upload, label: "Upload" },
     { href: "/usage", icon: BarChart3, label: "Usage" },
   ]
+
+  const handleLogout = async () => {
+    const result = await logout()
+
+    if (!result.success) {
+      alert(result.message || "Logout failed. Please try again.")
+    }
+
+    router.push("/")
+  }
 
   return (
     <div className="w-64 bg-card border-r flex flex-col h-screen">
@@ -61,8 +73,8 @@ export function Sidebar() {
         </div>
         <Button
           variant="ghost"
-          className="w-full justify-start gap-2 text-destructive hover:text-destructive"
-          onClick={() => logout()}
+          className="w-full justify-start gap-2 text-destructive hover:text-destructive cursor-pointer"
+          onClick={handleLogout}
         >
           <LogOut className="w-4 h-4" />
           Logout

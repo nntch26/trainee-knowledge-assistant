@@ -13,6 +13,7 @@ import { useAuth } from "@/lib/auth-context";
 import { MessageSquare, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 type RegisterFormData = {
   name: string;
@@ -23,6 +24,7 @@ type RegisterFormData = {
 
 export function RegisterPage() {
   const { register: registerUser } = useAuth();
+  const router = useRouter();
 
   const {
     register,
@@ -51,17 +53,29 @@ export function RegisterPage() {
 
     if (!result.success) {
       setError("root", {
-        message: "Registration failed. Please try again.",
+        message: result.message || "Registration failed. Please try again.",
       });
+      return; 
     }
+
+    console.log("Registration successful:", result);
+
+    // ไป login page
+    router.push("/");
+    
   };
+
+
+    
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
+
+        {/* header */}
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-700 to-sky-500 rounded-xl flex items-center justify-center">
               <MessageSquare className="w-6 h-6 text-primary-foreground" />
             </div>
           </div>
@@ -73,6 +87,16 @@ export function RegisterPage() {
         </CardHeader>
 
         <CardContent>
+
+         {/* error message */}
+          {errors.root && (
+            <p className="text-sm text-red-500">
+              {errors.root.message}
+            </p>
+          )}
+
+
+          {/* Registration form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
@@ -177,16 +201,9 @@ export function RegisterPage() {
               )}
             </div>
 
-            {/* API Error */}
-            {errors.root && (
-              <p className="text-sm text-red-500">
-                {errors.root.message}
-              </p>
-            )}
-
             <Button
               type="submit"
-              className="w-full cursor-pointer"
+              className="w-full cursor-pointer rounded-full"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

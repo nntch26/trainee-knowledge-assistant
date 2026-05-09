@@ -1,5 +1,6 @@
 import { AuthResponse, LoginRequest, RegisterRequest } from "@/types/auth";
 import { createAxiosClient } from "../axios-client";
+import { handleApiError } from "../error-handler";
 
 
 // Login
@@ -14,11 +15,7 @@ export async function loginService(data: LoginRequest): Promise<AuthResponse> {
       user: response.data.data,
     };
   } catch (error: any) {
-    return {
-      success: false,
-      message:
-        error.response?.data?.message || "Login failed",
-    };
+    return handleApiError(error, "Login failed");
   }
 }
 
@@ -35,19 +32,12 @@ export async function registerService(data: RegisterRequest): Promise<AuthRespon
     };
 
   } catch (error: any) {
-
-    console.log("Register Error:", error);
-    return {
-      success: false,
-      message:
-        error.response?.data?.message ||
-        "Registration failed",
-    };
+    return handleApiError(error, "Registration failed");
   }
 }
 
 // Logout
-export async function logoutService(): Promise<{success: boolean;message?: string;}> {
+export async function logoutService(): Promise<{success: boolean;error?: string;}> {
   try {
     const axiosclient = await createAxiosClient();
     const response =  await axiosclient.post("/auth/logout");
@@ -55,12 +45,8 @@ export async function logoutService(): Promise<{success: boolean;message?: strin
     return {success: true};
 
   } catch (error: any) {
-
-    return {
-      success: false,
-      message:
-        error.response?.data?.message || "Logout failed",
-    };
+    return handleApiError(error, "Logout failed");
+    
   }
 }
 

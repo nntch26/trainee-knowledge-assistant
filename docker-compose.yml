@@ -32,7 +32,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend/chat-app
+      context: ./frontend/chat-ai-app
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: web-app

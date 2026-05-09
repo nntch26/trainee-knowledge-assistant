@@ -6,15 +6,22 @@ const cookieParser = require('cookie-parser');
 
 // Import routes
 const authRoute = require("./routes/authRoute");
+const chatRoute = require("./routes/chatRoute");
 
 
 const app = express();
 
 dotenv.config();
 const PORT = process.env.BACKEND_PORT || 8000;
+const ORIGIN_URL = process.env.FRONTEND_URL;
 
 app.use(bodyParser.json());
-app.use(cors());            // เปิดใช้งาน CORS ทุก routes
+app.use(
+  cors({
+    origin: ORIGIN_URL, // อนุญาตเฉพาะ origin ที่กำหนด
+    credentials: true,
+  })
+);
 
 
 app.use(cookieParser())
@@ -29,6 +36,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
+app.use("/api/chat", chatRoute);
 
 
 

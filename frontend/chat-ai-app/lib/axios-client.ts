@@ -2,7 +2,6 @@ import { HttpError } from "@/types/api";
 import axios, { AxiosError } from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
-console.log("NEXT_PUBLIC_API_URL =", process.env.NEXT_PUBLIC_API_URL);
 
 export async function createAxiosClient() {
   if (!API_BASE_URL) throw new Error("Base URL is required");
@@ -16,6 +15,8 @@ export async function createAxiosClient() {
             "Content-Type": "application/json",
         },
     });
+
+    console.log("client", client)
 
     client.interceptors.response.use(
         (response) => response,

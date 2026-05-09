@@ -46,6 +46,8 @@ model UploadedFile {
 
 model Chat {
   id     Int  @id @default(autoincrement())
+  publicId  String @unique @default(uuid())
+
   userId Int
   user   User @relation(fields: [userId], references: [id])
 

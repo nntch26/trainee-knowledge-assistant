@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 type LoginFormData = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -29,17 +29,17 @@ export function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await login(data.email, data.password);
+    const result = await login(data.username, data.password);
 
     if (!result.success) {
       setError("root", {
-        message: "Invalid email or password",
+        message: "Invalid username or password",
       });
     }
   };
@@ -49,7 +49,7 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-700 to-sky-500 rounded-xl flex items-center justify-center">
               <MessageSquare className="w-6 h-6 text-primary-foreground" />
             </div>
           </div>
@@ -65,30 +65,25 @@ export function LoginPage() {
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
           >
-            {/* Email */}
+            {/* Username */}
             <div className="space-y-2">
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="text-sm font-medium"
               >
-                Email
+                Username
               </label>
               <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value:
-                      /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
-                    message: "Invalid email format",
-                  },
+                id="username"
+                type="text"
+                placeholder="Enter your username"
+                {...register("username", {
+                  required: "Username is required",
                 })}
               />
-              {errors.email && (
+              {errors.username && (
                 <p className="text-sm text-red-500">
-                  {errors.email.message}
+                  {errors.username.message}
                 </p>
               )}
             </div>
@@ -108,9 +103,9 @@ export function LoginPage() {
                 {...register("password", {
                   required: "Password is required",
                   minLength: {
-                    value: 8,
+                    value: 6,
                     message:
-                      "Password must be at least 8 characters",
+                      "Password must be at least 6 characters",
                   },
                 })}
               />
@@ -130,7 +125,7 @@ export function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full cursor-pointer rounded-full"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

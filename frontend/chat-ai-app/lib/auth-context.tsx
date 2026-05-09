@@ -11,7 +11,7 @@ interface AuthContextType {
   isLoading: boolean
   login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>
   register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>
-  logout: () => Promise<void>
+  logout: () => Promise<{ success: boolean; message?: string }>
   isAuthenticated: boolean
 }
 
@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true }
     }
     
-    return { success: false, message: result.message }
+    return { success: false, message: result.error}
   }
 
   // Register function
@@ -60,17 +60,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (result.success && result.user) {
       setUser(result?.user)
       localStorage.setItem("user", JSON.stringify(result.user))
+
       return { success: true }
     }
     
-    return { success: false, message: result.message }
+    return { success: false, message: result.error }
   }
 
   // Logout function
   const logout = async () => {
-    await logoutService()
+    const result = await logoutService()
+
+    if (!result.success) {
+      return { success: false, message: result.error }
+    }
     setUser(null)
     localStorage.removeItem("user")
+
+    return { success: true }
+
   }
 
   return (

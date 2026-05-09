@@ -10,6 +10,13 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0.02 240);
   --primary: oklch(0.55 0.2 240);
+  --primary-hover: oklch(0.65 0.18 210);
+  --primary-gradient: linear-gradient(
+    90deg,
+    oklch(0.55 0.2 240),
+    oklch(0.60 0.19 225),
+    oklch(0.65 0.18 210)
+  );
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.95 0.01 240);
   --secondary-foreground: oklch(0.3 0.02 240);
