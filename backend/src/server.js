@@ -11,7 +11,7 @@ const authRoute = require("./routes/authRoute");
 const app = express();
 
 dotenv.config();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.BACKEND_PORT || 8000;
 
 app.use(bodyParser.json());
 app.use(cors());            // เปิดใช้งาน CORS ทุก routes

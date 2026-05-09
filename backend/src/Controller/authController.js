@@ -8,7 +8,6 @@ require("dotenv").config();
 const register = async (req, res) => {
     const { username, email, password } = req.body;
 
-
     // ตรวจสอบ email ซ้ำกับในระบบหรือไม่
     const emailExists = await prisma.user.findUnique({
         where: { email }

@@ -22,6 +22,8 @@ services:
       - postgres
     env_file:
       - .env
+    environment:
+      PORT: ${BACKEND_PORT}
     volumes:
       - ./backend:/app
       - /app/node_modules            
@@ -29,7 +31,10 @@ services:
 
 
   frontend:
-    build: ./frontend/chat-app
+    build:
+      context: ./frontend/chat-app
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: web-app
     ports:
       - "3000:3000"
@@ -37,7 +42,8 @@ services:
       - backend
     env_file:
       - .env
-    
+    environment:
+      PORT: ${FRONTEND_PORT}
 
 volumes:
   postgres_data:
