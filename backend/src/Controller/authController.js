@@ -8,10 +8,6 @@ require("dotenv").config();
 const register = async (req, res) => {
     const { username, email, password } = req.body;
 
-    // ข้อมูลครบหรือไม่
-    if (!username || !email || !password) {
-        return res.status(400).json({ message: "Please provide username, email, and password" });
-    }
 
     // ตรวจสอบ email ซ้ำกับในระบบหรือไม่
     const emailExists = await prisma.user.findUnique({
@@ -68,10 +64,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ message: "Please provide username and password" });
-    } 
-
     // ค้นหาผู้ใช้ ด้วย username
     const user = await prisma.user.findUnique({
         where: { username }
@@ -81,7 +73,6 @@ const login = async (req, res) => {
     if(!user){
         return res.status(400).json({ message: "Invalid username or password" });
     }
-
 
     // ตรวจสอบรหัสผ่าน
     const isMatch = await bcrypt.compare(password, user.password);
@@ -108,7 +99,6 @@ const login = async (req, res) => {
             httpOnly: true, // ฝั่งไคลเอนต์จะเข้าถึงไม่ได้
             sameSite: "none", // cross-site
         });
-
 
 
         res.status(200).json({ 

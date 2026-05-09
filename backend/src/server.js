@@ -20,6 +20,8 @@ app.use(cors());            // เปิดใช้งาน CORS ทุก rou
 app.use(cookieParser())
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // API Routes
 app.get("/", (req, res) => {
