@@ -15,7 +15,6 @@ export function Sidebar() {
   const navItems = [
     { href: "/chat", icon: MessageSquare, label: "Chat" },
     { href: "/upload", icon: Upload, label: "Upload" },
-    { href: "/usage", icon: BarChart3, label: "Usage" },
   ]
 
   const handleLogout = async () => {
@@ -25,7 +24,7 @@ export function Sidebar() {
       alert(result.message || "Logout failed. Please try again.")
     }
 
-    router.push("/")
+    router.push("/login")
   }
 
   return (
@@ -33,7 +32,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="p-4 border-b">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-700 to-sky-500 rounded-lg flex items-center justify-center">
             <MessageSquare className="w-4 h-4 text-primary-foreground" />
           </div>
           <span className="font-semibold text-lg">AI Chat</span>
@@ -41,16 +40,16 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1">
+      <nav className="flex-1 p-3 space-y-4">
         {navItems.map((item) => {
           const isActive = pathname === item.href
           return (
             <Link key={item.href} href={item.href}>
               <Button
                 variant={isActive ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
+                className="w-full justify-start gap-2 cursor-pointer"
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-5 h-5" />
                 {item.label}
               </Button>
             </Link>

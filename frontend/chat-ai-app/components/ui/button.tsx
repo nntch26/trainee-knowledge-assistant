@@ -18,7 +18,7 @@ function Button({
     secondary:
       "bg-secondary text-secondary-foreground hover:bg-secondary/80",
     ghost:
-      "bg-transparent hover:bg-blue-100 hover:text-accent-foreground",
+      "bg-transparent hover:bg-gray-100 hover:text-accent-foreground",
   };
 
   const sizeClasses = {

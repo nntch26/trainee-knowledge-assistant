@@ -2,16 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useAuth } from "@/lib/auth-context";
-import { MessageSquare, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 type LoginFormData = {
@@ -19,7 +11,7 @@ type LoginFormData = {
   password: string;
 };
 
-export function LoginPage() {
+export function LoginForm() {
   const { login } = useAuth();
 
   const {
@@ -45,23 +37,8 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-700 to-sky-500 rounded-xl flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-primary-foreground" />
-            </div>
-          </div>
-
-          <CardTitle className="text-2xl">AI Chat</CardTitle>
-          <CardDescription>
-            Login to start chatting with AI
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form
+    <>
+     <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
           >
@@ -116,7 +93,7 @@ export function LoginPage() {
               )}
             </div>
 
-            {/* API Error */}
+            {/*  Error */}
             {errors.root && (
               <p className="text-sm text-red-500">
                 {errors.root.message}
@@ -138,18 +115,7 @@ export function LoginPage() {
               )}
             </Button>
           </form>
+    </>
 
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/register"
-              className="text-primary hover:underline"
-            >
-              Register
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
   );
 }

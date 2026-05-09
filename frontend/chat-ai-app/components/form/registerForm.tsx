@@ -2,16 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useAuth } from "@/lib/auth-context";
-import { MessageSquare, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +14,7 @@ type RegisterFormData = {
   confirmPassword: string;
 };
 
-export function RegisterPage() {
+export function RegisterForm() {
   const { register: registerUser } = useAuth();
   const router = useRouter();
 
@@ -58,10 +50,8 @@ export function RegisterPage() {
       return; 
     }
 
-    console.log("Registration successful:", result);
-
     // ไป login page
-    router.push("/");
+    router.push("/login");
     
   };
 
@@ -69,34 +59,8 @@ export function RegisterPage() {
     
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-
-        {/* header */}
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-700 to-sky-500 rounded-xl flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-primary-foreground" />
-            </div>
-          </div>
-
-          <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>
-            Register to start chatting with AI
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-
-         {/* error message */}
-          {errors.root && (
-            <p className="text-sm text-red-500">
-              {errors.root.message}
-            </p>
-          )}
-
-
-          {/* Registration form */}
+    <>
+     {/* Registration form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
@@ -201,6 +165,13 @@ export function RegisterPage() {
               )}
             </div>
 
+            {/* error message */}
+            {errors.root && (
+              <p className="text-sm text-red-500">
+                {errors.root.message}
+              </p>
+            )}
+
             <Button
               type="submit"
               className="w-full cursor-pointer rounded-full"
@@ -216,18 +187,10 @@ export function RegisterPage() {
               )}
             </Button>
           </form>
+    </>
 
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Already have an account?{" "}
-            <Link
-              href="/"
-              className="text-primary hover:underline"
-            >
-              Login
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+         
+
+       
   );
 }

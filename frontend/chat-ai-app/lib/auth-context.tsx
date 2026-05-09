@@ -7,7 +7,7 @@ import { User } from "@/types/user"
 
 
 interface AuthContextType {
-  user: User | null
+  user: User | null | undefined
   isLoading: boolean
   login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>
   register: (username: string, email: string, password: string) => Promise<{ success: boolean; message?: string }>
@@ -32,7 +32,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       } catch {
         localStorage.removeItem("user")
+        setUser(null);
       }
+    }else{
+      setUser(null);
     }
     setIsLoading(false)
   }, [])
@@ -89,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: user !== null && user !== undefined,
       }}
     >
       {children}
