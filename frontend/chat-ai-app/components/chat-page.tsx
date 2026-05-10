@@ -58,6 +58,7 @@ export function ChatPage({
     if (!input.trim() || isLoading) return;
 
     const messageText = input;
+    console.log("Sending message:", messageText);
 
     // push user message
     const userMessage: Message = {
@@ -91,6 +92,7 @@ export function ChatPage({
 
       // 2. push assistant message
       const assistantMessage: Message = {
+          id: assistant?.message?.id,
           role: "ASSISTANT",
           content: assistant?.message?.content || { text: "", type: "text" },
           promptTokens: assistant?.message?.promptTokens ?? 0,
@@ -166,8 +168,8 @@ export function ChatPage({
 
           // chat list
           <div className="w-full flex flex-col p-4">
-            {messages.map((message) => (
-              <MessageItem key={message.id} message={message} />
+            {messages.map((message, index) => (
+              <MessageItem key={message.id ?? `msg-${index}`} message={message} />
             ))}
           </div>
         )}
@@ -188,7 +190,7 @@ export function ChatPage({
                 </span>
               </div>
             </Card> */}
-            <Card className="px-4 py-3 bg-card">
+            <Card className="px-4 py-3 bg-card rounded-full">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
                       <span className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -221,13 +223,11 @@ export function ChatPage({
           />
 
           <Button
-            className="rounded-full"
+            className="rounded-full cursor-pointer"
             type="submit"
-            disabled={
-              isLoading || !input.trim()
-            }
+            disabled={isLoading}
           >
-            <Send className="w-4 h-4 " />
+            <Send className="w-5 h-5 " />
           </Button>
         </form>
       </div>

@@ -128,7 +128,7 @@ const createChat = async (req, res) => {
 // send message to chat
 const sendMessage = async (req, res) => {
   try {
-    const { messages, chatPublicId } = req.body;
+    const { message, chatPublicId } = req.body;
     const userId = req.user.id;
 
     if (!userId || !chatPublicId) {
@@ -136,7 +136,7 @@ const sendMessage = async (req, res) => {
     }
     
     // เรียก Service
-    const result = await generateResponse(userId, chatPublicId, messages);
+    const result = await generateResponse(userId, chatPublicId, message);
 
     return res.status(200).json({
         success: true,

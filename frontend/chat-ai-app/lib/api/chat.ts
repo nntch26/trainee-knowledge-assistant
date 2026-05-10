@@ -51,7 +51,7 @@ export async function getChatById(chatPublicId:string): Promise<GetMessageRespon
 export async function sendMessageService(data:MessagePayload) {
 
   try {
-      const axiosClient = await createServerAxiosClient();
+      const axiosClient = await createAxiosClient();
       const response = await axiosClient.post<SendMessageResponse>("/chat/message", data);
 
       return response.data;
