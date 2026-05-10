@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { useAuth } from "@/lib/auth-context"
-import { Send, Bot, User, Loader2 } from "lucide-react"
+import { Send, Bot, User, Loader2, Sparkles, Trash2 } from "lucide-react"
 import { Sidebar } from "./sidebar"
 
 interface Message {
@@ -88,10 +88,20 @@ export function ChatPage() {
               Welcome, {user?.username || "User"}
             </p>
           </div>
-          <div className="bg-accent px-3 py-1.5 rounded-lg">
-            <span className="text-sm font-medium">Tokens: {totalTokens}</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm">
+              <span className="text-muted-foreground">Session Tokens:</span>
+              {/* <span className="font-mono font-medium text-blue-600">{totalTokens.toLocaleString()}</span> */}
+            </div>
+            <Button variant="ghost" size="sm"  className="gap-2">
+              <Trash2 className="w-4 h-4" />
+              Clear All
+            </Button>
           </div>
+         
         </header>
+
+   
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -99,7 +109,7 @@ export function ChatPage() {
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Bot className="w-8 h-8 text-primary" />
+                  <Bot className="w-8 h-8 text-blue-500" />
                 </div>
                 <h2 className="text-xl font-medium mb-2">Start a conversation</h2>
                 <p className="text-muted-foreground">

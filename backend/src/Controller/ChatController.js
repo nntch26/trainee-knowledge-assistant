@@ -5,13 +5,13 @@ const { generateResponse } = require("../services/chatService");
 // get chat by id ประววัติแชท
 const getChatById = async (req, res) => {
     try {
-        const { chatpublicId } = req.params;
+        const { chatPublicId } = req.params;
         const userId = req.user.id;
 
         // ค้นหาแชท chatid
         const chat = await prisma.chat.findUnique({
             where: {
-                publicId: chatpublicId,
+                publicId: chatPublicId,
             },
         });
 
@@ -22,25 +22,51 @@ const getChatById = async (req, res) => {
         // ดึงข้อความทั้งหมดของแชทนี้
         const chatMessages = await prisma.chatmessage.findMany({
             where: {
-                chatId: Number(chatpublicId),
+                chatId: chat.id,
                 userId: userId
             }
         });
 
         
         return res.status(200).json({
+            success: true,
             message: "Chat found successfully",
             data: {
-                chatpublicId: chat.publicId,
+                chatPublicId: chat.publicId,
                 messages: chatMessages
             }
         });
 
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Cannot find chat" });
+        return res.status(500).json({ success: false, error: "Cannot find chat" });
     }
 };
+
+
+// รายการแชททั้งหมดของผู้ใช้
+const getMyChats = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const chats = await prisma.chat.findMany({
+            where: {
+                userId: userId
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Chats found successfully",
+            data: chats
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, error: "Cannot find chats" });
+    }
+};
+
 
 // create chat 
 const createChat = async (req, res) => {
@@ -48,14 +74,18 @@ const createChat = async (req, res) => {
         const userId = req.user.id;
         
         // สร้างแชทใหม่
-        const chat = await prisma.chat.create({data: {userId}, });
+        const chat = await prisma.chat.create({
+            data: {userId}, 
+        });
 
 
         return res.status(201).json({
+            success: true,
             message: "Chat created successfully",
             data:{
                 // chatId: chat.id,
-                chatpublicId: chat.publicId,
+                chatPublicId: chat.publicId,
+                title : chat.title
             }
         });
 
@@ -69,25 +99,28 @@ const createChat = async (req, res) => {
 // send message to chat
 const sendMessage = async (req, res) => {
   try {
-    const { messages, chatId } = req.body;
+    const { messages, chatPublicId } = req.body;
     const userId = req.user.id;
 
-    if (!userId || !chatId) {
-      return res.status(400).json({ error: 'Missing userId or chatId' });
+    if (!userId || !chatPublicId) {
+      return res.status(400).json({ error: 'Missing userId or chatPublicId' });
     }
+    
     // เรียก Service
-    const reply = await generateResponse(userId, chatId, messages);
+    const result = await generateResponse(userId, chatPublicId, messages);
 
     return res.status(200).json({
+        success: true,
         message: "Message sent successfully",
-        data:{
-            reply: reply,
-        }
+        data: {
+            chatPublicId: result.chatPublicId,
+            message: result.assistantMessage,
+        },
     });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "chat failed" });
+    res.status(500).json({ success: false, error: "chat failed" });
   }
 };
 
@@ -98,4 +131,5 @@ module.exports = {
     createChat,
     sendMessage,
     getChatById,
+    getMyChats
 }

@@ -44,6 +44,7 @@ const register = async (req, res) => {
         });
 
         res.status(201).json({ 
+            success: true,
             message: "User created successfully", 
             data :{
                 id: user.id,
@@ -54,7 +55,7 @@ const register = async (req, res) => {
 
     }catch(error){
         console.error("Registration error:", error);
-        res.status(500).json({ message: "Server error during registration" });
+        res.status(500).json({ success: false, message: "Server error during registration" });
     }
 }
 
@@ -101,6 +102,7 @@ const login = async (req, res) => {
 
 
         res.status(200).json({ 
+            success: true,
             message: "Login successful", 
             data :{
                 id: user.id,
@@ -111,7 +113,7 @@ const login = async (req, res) => {
 
     }catch(error){
         console.error("Login error:", error);
-        res.status(500).json({ message: "Server error during login" });
+        res.status(500).json({ success: false, message: "Server error during login" });
     }
 }
 
@@ -123,7 +125,7 @@ const logout = async (req, res) => {
         secure: true,
         sameSite: "Strict",
     });
-    res.status(200).json({ message: "Logged out successfully" });
+    res.status(200).json({ success: true, message: "Logged out successfully" });
 };
 
 

@@ -8,3 +8,11 @@ export class HttpError extends Error {
     this.status = status;
   }
 }
+
+
+export interface ApiResponse<T = null>{
+  success: boolean;
+  message?: string;
+  error?:string
+  data?: T
+}

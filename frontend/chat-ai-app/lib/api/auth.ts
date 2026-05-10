@@ -6,8 +6,8 @@ import { handleApiError } from "../error-handler";
 // Login
 export async function loginService(data: LoginRequest): Promise<AuthResponse> {
   try {
-    const axiosclient = await createAxiosClient();
-    const response = await axiosclient.post("/auth/login", data);
+    const axiosClient = await createAxiosClient();
+    const response = await axiosClient.post("/auth/login", data);
 
     return {
       success: true,
@@ -22,8 +22,8 @@ export async function loginService(data: LoginRequest): Promise<AuthResponse> {
 // Register
 export async function registerService(data: RegisterRequest): Promise<AuthResponse> {
   try {
-    const axiosclient = await createAxiosClient();
-    const response = await axiosclient.post("/auth/register", data);
+    const axiosClient = await createAxiosClient();
+    const response = await axiosClient.post("/auth/register", data);
 
     return {
       success: true,
@@ -39,8 +39,8 @@ export async function registerService(data: RegisterRequest): Promise<AuthRespon
 // Logout
 export async function logoutService(): Promise<{success: boolean;error?: string;}> {
   try {
-    const axiosclient = await createAxiosClient();
-    const response =  await axiosclient.post("/auth/logout");
+    const axiosClient = await createAxiosClient();
+    const response =  await axiosClient.post("/auth/logout");
 
     return {success: true};
 

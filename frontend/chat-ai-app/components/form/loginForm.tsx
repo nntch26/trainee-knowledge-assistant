@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth-context";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 type LoginFormData = {
   username: string;
@@ -13,6 +14,7 @@ type LoginFormData = {
 
 export function LoginForm() {
   const { login } = useAuth();
+  const router = useRouter();
 
   const {
     register,
@@ -34,6 +36,9 @@ export function LoginForm() {
         message: "Invalid username or password",
       });
     }
+    
+    // เด้งไปหน้าแชท
+    router.push("/chat");
   };
 
   return (

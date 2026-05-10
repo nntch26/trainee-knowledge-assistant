@@ -47,6 +47,7 @@ model UploadedFile {
 model Chat {
   id     Int  @id @default(autoincrement())
   publicId  String @unique @default(uuid())
+  title   String @default("New Chat")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
