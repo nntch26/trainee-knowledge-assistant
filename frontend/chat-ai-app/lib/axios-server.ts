@@ -12,6 +12,7 @@ export async function createServerAxiosClient() {
   }
 
   const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
    // สร้าง axios instance
     const server = axios.create({
@@ -20,7 +21,7 @@ export async function createServerAxiosClient() {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
-            Cookie: cookieStore.toString()
+            Cookie: token ? `token=${token}` : "",
         },
     });
 

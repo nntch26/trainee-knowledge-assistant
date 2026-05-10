@@ -11,6 +11,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 
   backend:
     build: ./backend
@@ -28,6 +35,12 @@ services:
       - ./backend:/app
       - /app/node_modules            
       - ./backend/uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"] 
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 
   frontend:
@@ -39,7 +52,9 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      # ปรับให้ Frontend รอจนกว่า Backend จะ healthy
+      backend:
+        condition: service_healthy
     env_file:
       - .env
     environment:
