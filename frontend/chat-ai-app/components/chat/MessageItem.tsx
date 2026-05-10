@@ -42,6 +42,7 @@ export default function MessageItem({ message } : { message: Message }) {
             </>
           
         ) : (
+          <>
           <div className="px-2 py-1 w-full">
             {message.content.type === "markdown" ? (
               <MarkdownRenderer content={message.content.text} />
@@ -51,6 +52,8 @@ export default function MessageItem({ message } : { message: Message }) {
               </p>
             )}
           </div>
+          </>
+          
         )}
 
         {/* Token Usage */}

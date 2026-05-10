@@ -18,7 +18,7 @@ export type GetChatResponse = ApiResponse<ChatItem>;
 // ---------- massage ----------
 
 export interface Message {
-  id: number;
+  id?: number;
   role: "USER" | "ASSISTANT";
   content: {
     text: string;
@@ -37,5 +37,16 @@ export interface MessageResponse {
     totalTokens: number;
 }
 
-export type GetMessageResponse = ApiResponse<MessageResponse>;
+export interface ReplyMessageResponse {
+    chatPublicId: string;
+    message: Message;
+}
 
+export interface MessagePayload{
+  chatPublicId: string;
+  message: string
+}
+
+
+export type GetMessageResponse = ApiResponse<MessageResponse>;
+export type SendMessageResponse = ApiResponse<ReplyMessageResponse>

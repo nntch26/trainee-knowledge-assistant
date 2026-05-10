@@ -1,6 +1,7 @@
 import { HttpError } from "@/types/api";
 import axios, { AxiosError } from "axios";
 
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 export async function createAxiosClient() {
@@ -16,7 +17,6 @@ export async function createAxiosClient() {
         },
     });
 
-    console.log("client", client)
 
     client.interceptors.response.use(
         (response) => response,

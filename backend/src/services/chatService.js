@@ -1,27 +1,22 @@
 
-const { ai } = require("../lib/gemini"); 
+const { googleAi } = require("../lib/gemini"); 
 const prisma  = require("../lib/prisma");
+// const { streamText } = require("ai");
 
-const generateResponse = async (userId, chatPublicId, messages) => {
+const generateResponse = async (userId, chatPublicId, userText ) => {
 
     // ค้นหาแชท chatid 
     const chat = await prisma.chat.findFirst({
-        where: {
-            publicId: chatPublicId,
-            userId: userId, 
-        },
-        include: {
-        messages: {
-            orderBy: {
-            createdAt: "asc",
-            },
-        },
+        where: { publicId: chatPublicId,userId: userId, },
+        include: { 
+            messages: { orderBy: {createdAt: "asc",}}
         },
     });
     
     if (!chat) {
         throw new Error("Chat not found");
     }
+
 
     try{
         // บันทึกข้อความ ผู้ใช้
@@ -30,7 +25,7 @@ const generateResponse = async (userId, chatPublicId, messages) => {
                 chatId: chat.id,
                 role: "USER",
                 content: {
-                    text: messages,
+                    text: userText,
                     type: "text",
                 },
             },
@@ -39,22 +34,12 @@ const generateResponse = async (userId, chatPublicId, messages) => {
         // อัพเดท title แชท เป็นข้อความล่าสุด
         await prisma.chat.update({
             where: { id: chat.id },
-            data: { title: messages.slice(0, 30) }, // ใช้ข้อความล่าสุด 30 ตัวอักษร เป็น title
+            data: { title: userText.slice(0, 30) }, // ใช้ข้อความล่าสุด 30 ตัวอักษร เป็น title
         });
 
-
-        // โหลด history chat ใหม่
-        const updatedChat = await prisma.chat.findUnique({
-            where: { id: chat.id },
-            include: {
-            messages: {
-                orderBy: { createdAt: "asc" },
-            },
-            },
-        });
-
+    
         // history เฉพาะข้อความ ก่อนหน้า 
-        const history = updatedChat.messages.slice(0, -1).map((m) => ({
+        const history = chat.messages.slice(0, -1).map((m) => ({
             // แปลง role 
             role: m.role === "USER" ? "user" : "model",
             parts: [
@@ -67,15 +52,14 @@ const generateResponse = async (userId, chatPublicId, messages) => {
             ],
         }));
 
-        // สร้าง Gemini chat
-        const geminiChat = ai.chats.create({
+        // สร้าง Gemini chat เรียก streamText
+        const geminiChat = googleAi.chats.create({
             model: "gemini-2.5-flash", 
             history,
         });
 
-
-        // ส่งข้อความล่าสุด
-        const response = await geminiChat.sendMessage({ message: messages });
+        // // ส่งข้อความล่าสุด
+        const response = await geminiChat.sendMessage({ message: userText });
 
 
         console.log("Response from Gemini:", response);    
@@ -83,7 +67,7 @@ const generateResponse = async (userId, chatPublicId, messages) => {
         const usage = response.usageMetadata; // ข้อมูลการใช้ token
     
 
-        // บันทึกข้อความ ตอบกลับ Gemini
+        // // บันทึกข้อความ ตอบกลับ Gemini
         const assistantMessage = await prisma.chatMessage.create({
             data: {
                 chatId: chat.id,
@@ -104,7 +88,7 @@ const generateResponse = async (userId, chatPublicId, messages) => {
                 data: {
                     userId,
                     type: "chat",
-                    question: messages,
+                    question: userText,
                     inputTokens: usage.promptTokenCount || 0,
                     outputTokens: usage.candidatesTokenCount || 0,
                 },

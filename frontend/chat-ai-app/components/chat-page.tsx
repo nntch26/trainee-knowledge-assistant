@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/lib/auth-context";
-// import { getChatByIdService, sendMessageService } from "@/lib/api/chat";
+import { sendMessageService } from "@/lib/api/chat";
 import {
   Send,
   Bot,
@@ -15,23 +15,25 @@ import {
   Sparkles,
   Coins,
 } from "lucide-react";
-import { GetMessageResponse, Message } from "@/types/chat";
-import { getChatById } from "@/lib/api/chat";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import {  Message } from "@/types/chat";
 import MessageItem from "./chat/MessageItem";
 
 interface ChatPageProps {
   chatPublicId: string;
+  initialMessages: Message[];
+  initialTitle: string;
+  initialSessionTokens: number;
 }
 
-export function ChatPage({ chatPublicId }: ChatPageProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [title, setTitle] = useState("New Chat");
+export function ChatPage({ 
+  chatPublicId,initialTitle, initialMessages, initialSessionTokens 
+}: ChatPageProps) {
+
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [title, setTitle] = useState(initialTitle);
+  const [sessionTokens, setSessionTokens] = useState(initialSessionTokens);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionTokens, setSessionTokens] = useState(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -48,76 +50,68 @@ export function ChatPage({ chatPublicId }: ChatPageProps) {
   }, [messages]);
 
 
-  
-  // ดึง chat history
-  useEffect(() => {
-    const fetchChat = async () => {
-      const result = await getChatById(chatPublicId);
+
+  // // ----------- Send message ---------------
+ const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!input.trim() || isLoading) return;
+
+    const messageText = input;
+
+    // push user message
+    const userMessage: Message = {
+      role: "USER",
+      content: {
+        text: messageText,
+        type: "text",
+      },
+      promptTokens: 0,
+      completionTokens: 0,
+      totalTokens: 0,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+
+      const payload = {
+        chatPublicId,
+        message: messageText,
+      }
+
+      const result = await sendMessageService(payload);
 
       if (!result.success) return;
 
-      setTitle(result.data?.title || "");
-      setSessionTokens(result.data?.totalTokens || 0);
-      setMessages(result.data?.messages || []);
-    };
+      const assistant = result.data;
 
-    fetchChat();
-  }, [chatPublicId]);
+      // 2. push assistant message
+      const assistantMessage: Message = {
+          role: "ASSISTANT",
+          content: assistant?.message?.content || { text: "", type: "text" },
+          promptTokens: assistant?.message?.promptTokens ?? 0,
+          completionTokens: assistant?.message?.completionTokens ?? 0,
+          totalTokens: assistant?.message?.totalTokens ?? 0,
+          createdAt: assistant?.message?.createdAt ?? new Date().toISOString(),
+      };
 
+      // update messages
+      setMessages((prev) => [...prev, assistantMessage]);
 
-  // // ----------- Send message ---------------
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
+      // update session tokens
+      setSessionTokens((prev) => prev + (assistant?.message?.totalTokens ?? 0));
 
-  //   if (!input.trim() || isLoading) return;
-
-  //   // // Optimistic user message
-  //   // const userMessage: Message = {
-  //   //   id: Date.now().toString(),
-  //   //   role: "user",
-  //   //   content: input,
-  //   //   tokens: estimateTokens(input),
-  //   // };
-
-  //   // setMessages((prev) => [...prev, userMessage]);
-
-  //   const messageText = input;
-  //   setInput("");
-  //   setIsLoading(true);
-
-  //   try {
-  //     const result = await sendMessageService({
-  //       chatPublicId,
-  //       message: messageText,
-  //     });
-
-  //     if (result.success) {
-  //       const assistantMessage: Message = {
-  //         id: Date.now().toString() + "-assistant",
-  //         role: "assistant",
-  //         content: result.data.reply,
-  //         tokens: result.data.usage?.totalTokens || 0,
-  //       };
-
-  //       setMessages((prev) => [...prev, assistantMessage]);
-
-  //       // Update session token count
-  //       if (result.data.usage?.totalTokens) {
-  //         setSessionTokens(
-  //           (prev) => prev + result.data.usage.totalTokens
-  //         );
-  //       }
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
-  const totalTokens = sessionTokens || messages.reduce(
-      (sum, msg) => sum + (msg.totalTokens || 0),
-      0
-    );
+
 
   return (
     <div className="flex-1 flex flex-col h-screen">
@@ -137,7 +131,7 @@ export function ChatPage({ chatPublicId }: ChatPageProps) {
               Session Tokens:
             </span>
             <span className="font-mono font-medium">
-              {totalTokens.toLocaleString()}
+              {sessionTokens.toLocaleString()}
             </span>
           </div>
 
@@ -154,7 +148,7 @@ export function ChatPage({ chatPublicId }: ChatPageProps) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 ? (
+        {messages?.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -213,7 +207,7 @@ export function ChatPage({ chatPublicId }: ChatPageProps) {
       {/* Input */}
       <div className=" border-t bg-card p-6">
         <form
-          // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           className="flex gap-2 max-w-3xl mx-auto items-center"
         >
           <Input

@@ -259,20 +259,35 @@ export function UploadPage() {
 
         {/* Input */}
         {file && (
-          <div className="border-t bg-card p-4">
-            <form onSubmit={handleSubmit} className="flex gap-2 max-w-3xl mx-auto">
+          <>
+          {/* Input */}
+          <div className=" border-t bg-card p-6">
+            <form
+              onSubmit={handleSubmit}
+              className="flex gap-2 max-w-3xl mx-auto items-center"
+            >
               <Input
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question about your document..."
+                onChange={(e) =>
+                  setInput(e.target.value)
+                }
+                placeholder="Type your message..."
                 disabled={isLoading}
-                className="flex-1"
+                className="flex-1 p-5 rounded-full"
               />
-              <Button type="submit" disabled={isLoading || !input.trim()}>
-                <Send className="w-4 h-4" />
+
+              <Button
+                className="rounded-full"
+                type="submit"
+                disabled={
+                  isLoading || !input.trim()
+                }
+              >
+                <Send className="w-4 h-4 " />
               </Button>
             </form>
           </div>
+          </>
         )}
       </div>
     </div>

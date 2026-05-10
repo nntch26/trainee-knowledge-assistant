@@ -75,7 +75,6 @@ export function Sidebar() {
 
     router.push("/login")
   }
-  console.log("chats:", chats)
 
   return (
     <div className="w-64 bg-card border-r flex flex-col h-screen">
@@ -94,9 +93,9 @@ export function Sidebar() {
         <Button
           onClick={handleNewChat}
           disabled={isCreatingChat}
-          className="w-full justify-start gap-2 cursor-pointer"
+          className="w-full justify-start gap-2 cursor-pointer "
         >
-          <Sparkles className="w-4 h-4" />
+          <Plus className="w-4 h-4" />
           {isCreatingChat ? "Creating..." : "New Chat"}
         </Button>
       </div>
