@@ -8,35 +8,55 @@ const getChatById = async (req, res) => {
         const { chatPublicId } = req.params;
         const userId = req.user.id;
 
-        // ค้นหาแชท chatid
-        const chat = await prisma.chat.findUnique({
-            where: {
-                publicId: chatPublicId,
+        // หา chat ของ user คนนี้ พร้อมดึง messages
+        const chat = await prisma.chat.findFirst({
+        where: {
+            publicId: chatPublicId,
+            userId: userId,
+        },
+        include: {
+            messages: {
+            orderBy: {
+                createdAt: "asc",
             },
+            },
+        },
         });
+
 
         if (!chat) {
             return res.status(404).json({ error: "Chat not found" });
         }
 
-        // ดึงข้อความทั้งหมดของแชทนี้
-        const chatMessages = await prisma.chatmessage.findMany({
-            where: {
-                chatId: chat.id,
-                userId: userId
-            }
+        // ดึง token ทั้งหมดที่ user คนนี้ได้ใช้ไป
+        const tokenUsages = await prisma.tokenUsage.findMany({
+            where: { userId: userId },
+            orderBy: { createdAt: "desc" },
         });
 
-        
+        const totalTokens = chat.messages.reduce((sum, msg) => sum + (msg.totalTokens || 0), 0);
+
         return res.status(200).json({
             success: true,
             message: "Chat found successfully",
             data: {
                 chatPublicId: chat.publicId,
-                messages: chatMessages
-            }
+                title: chat.title,
+                messages: chat.messages.map((msg) => ({
+                    id: msg.id,
+                    role: msg.role, // USER | ASSISTANT
+                    content: msg.content,
+                    promptTokens: msg.promptTokens || 0,
+                    completionTokens: msg.completionTokens || 0,
+                    totalTokens: msg.totalTokens || 0,
+                    createdAt: msg.createdAt,
+                })),
+                tokenUsages: tokenUsages || 0,
+                totalTokens: totalTokens || 0,
+            },
         });
 
+ 
     } catch (err) {
         console.error(err);
         return res.status(500).json({ success: false, error: "Cannot find chat" });
@@ -58,7 +78,13 @@ const getMyChats = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Chats found successfully",
-            data: chats
+            data: chats.map((chat) => ({
+                    chatPublicId: chat.publicId,
+                    title: chat.title,
+                    createdAt: chat.createdAt,
+                    userId: chat.userId
+                })),
+            
         });
 
     } catch (err) {

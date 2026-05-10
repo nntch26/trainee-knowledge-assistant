@@ -1,7 +1,7 @@
 
 import { RegisterForm } from '@/components/form/registerForm'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { MessageSquare } from 'lucide-react'
+import { MessageSquare, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 
@@ -16,7 +16,7 @@ export default function Register() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-700 to-sky-500 rounded-xl flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-primary-foreground" />
+              <Sparkles className="w-6 h-6 text-primary-foreground" />
             </div>
           </div>
 

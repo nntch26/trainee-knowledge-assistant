@@ -8,6 +8,7 @@ import {
   Upload,
   LogOut,
   Plus,
+  Sparkles,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -74,6 +75,7 @@ export function Sidebar() {
 
     router.push("/login")
   }
+  console.log("chats:", chats)
 
   return (
     <div className="w-64 bg-card border-r flex flex-col h-screen">
@@ -81,7 +83,7 @@ export function Sidebar() {
       <div className="p-4 border-b">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-700 to-sky-500 rounded-lg flex items-center justify-center">
-            <MessageSquare className="w-4 h-4 text-white" />
+            <Sparkles className="w-4 h-4 text-white" />
           </div>
           <span className="font-semibold text-lg">AI Chat</span>
         </div>
@@ -94,7 +96,7 @@ export function Sidebar() {
           disabled={isCreatingChat}
           className="w-full justify-start gap-2 cursor-pointer"
         >
-          <Plus className="w-4 h-4" />
+          <Sparkles className="w-4 h-4" />
           {isCreatingChat ? "Creating..." : "New Chat"}
         </Button>
       </div>
@@ -102,7 +104,7 @@ export function Sidebar() {
       {/* Navigation + Chat List */}
       <div className="flex-1 overflow-y-auto">
         {/* Static Navigation */}
-        <nav className="p-3 space-y-2">
+        <nav className="p-3 space-y-4">
           {navItems.map((item) => {
             const isActive = pathname === item.href
 
@@ -141,10 +143,12 @@ export function Sidebar() {
                 const isActive = pathname === href
 
                 return (
-                  <Link key={chat.chatPublicId ?? `chat-${index}`} href={href}>
+                  <Link key={chat.chatPublicId ?? `chat-${index}`} 
+                         href={href}
+                  >
                     <Button
                       variant={isActive ? "secondary" : "ghost"}
-                      className="w-full justify-start cursor-pointer"
+                      className="w-full justify-start cursor-pointer mb-2 rounded-full"
                     >
                       <span className="truncate text-sm">
                         {chat.title || "New Chat"}

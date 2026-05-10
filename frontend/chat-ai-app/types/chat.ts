@@ -13,3 +13,29 @@ export interface ChatItem {
 
 export type CreateChatResponse = ApiResponse<ChatItem>;
 export type GetChatResponse = ApiResponse<ChatItem>;
+
+
+// ---------- massage ----------
+
+export interface Message {
+  id: number;
+  role: "USER" | "ASSISTANT";
+  content: {
+    text: string;
+    type: string;
+  };
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  createdAt: string;
+}
+
+export interface MessageResponse {
+    chatPublicId: string;
+    title: string;
+    messages: Message[];
+    totalTokens: number;
+}
+
+export type GetMessageResponse = ApiResponse<MessageResponse>;
+

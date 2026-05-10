@@ -119,7 +119,6 @@ export function UploadPage() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="border-b bg-card px-6 py-4">
@@ -144,7 +143,7 @@ export function UploadPage() {
                   >
                     {isUploading ? (
                       <div className="flex flex-col items-center gap-2">
-                        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
                         <p className="text-sm text-muted-foreground">Processing file...</p>
                       </div>
                     ) : (
@@ -168,12 +167,14 @@ export function UploadPage() {
               </Card>
             </div>
           ) : (
+
+            // อัพโหลดแล้ว เข้าหน้าแชท
             <div className="max-w-3xl mx-auto space-y-4">
               {/* File Info */}
               <Card className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-primary" />
+                    <FileText className="w-5 h-5 text-blue-500" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{file.name}</p>
@@ -191,7 +192,7 @@ export function UploadPage() {
               <div className="space-y-4">
                 {messages.length === 0 ? (
                   <Card className="p-6 text-center">
-                    <Bot className="w-10 h-10 text-primary mx-auto mb-3" />
+                    <Bot className="w-10 h-10 text-blue-500 mx-auto mb-3" />
                     <p className="font-medium">Ask about your document</p>
                     <p className="text-sm text-muted-foreground">
                       Type a question below to get started

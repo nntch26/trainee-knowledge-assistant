@@ -41,7 +41,7 @@ const generateResponse = async (userId, chatPublicId, messages) => {
             where: { id: chat.id },
             data: { title: messages.slice(0, 30) }, // ใช้ข้อความล่าสุด 30 ตัวอักษร เป็น title
         });
-        
+
 
         // โหลด history chat ใหม่
         const updatedChat = await prisma.chat.findUnique({
@@ -99,19 +99,17 @@ const generateResponse = async (userId, chatPublicId, messages) => {
         });
 
         // บันทึก token ที่ใช้ไป
-        // const usage = response.usageMetadata;
-
-        // if (usage) {
-        //     await prisma.tokenUsage.create({
-        //         data: {
-        //         userId,
-        //         type: "chat",
-        //         question: messages,
-        //         inputTokens: usage.promptTokenCount || 0,
-        //         outputTokens: usage.candidatesTokenCount || 0,
-        //         },
-        //     });
-        // }
+        if (usage) {
+            await prisma.tokenUsage.create({
+                data: {
+                    userId,
+                    type: "chat",
+                    question: messages,
+                    inputTokens: usage.promptTokenCount || 0,
+                    outputTokens: usage.candidatesTokenCount || 0,
+                },
+            });
+        }
 
 
         return {
