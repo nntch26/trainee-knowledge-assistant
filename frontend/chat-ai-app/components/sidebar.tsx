@@ -55,7 +55,7 @@ export function Sidebar() {
       alert(result.message);
     }
 
-      const newChat = result?.data
+    const newChat = result?.data
 
     // เพิ่ม chat ใหม่เข้า state
     if (newChat) {

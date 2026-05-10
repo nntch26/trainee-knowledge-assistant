@@ -15,7 +15,12 @@ interface Message {
   tokens?: number
 }
 
-export function ChatPage() {
+
+interface ChatPageProps {
+  chatPublicId: string;
+}
+
+export function ChatPage({ chatPublicId }: ChatPageProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -78,7 +83,6 @@ export function ChatPage() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="border-b bg-card px-6 py-4 flex items-center justify-between">

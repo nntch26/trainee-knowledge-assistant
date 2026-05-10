@@ -1,11 +1,22 @@
+// app/(app)/layout.tsx
 "use client";
 
-import { AuthProvider } from "@/lib/auth-context";
+import { Sidebar } from "@/components/sidebar";
 
-export default function AppLayout({
+export default function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AuthProvider>{children}</AuthProvider>;
+  return (
+    <div className="flex h-screen">
+
+      <Sidebar />
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-hidden">
+        {children}
+      </main>
+    </div>
+  );
 }
