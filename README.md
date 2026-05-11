@@ -81,13 +81,13 @@ docker compose up --build
 
 ## Features Done
 
-- [x] Login + Protected Routes ระบบสมาชิกและการป้องกันเส้นทางสำหรับผู้ใช้ที่ล็อกอินเท่านั้น
+- [x] Login + Protected Routes 
 
 - [x] Chat with AI (basic)
 
-- [ ] RAG with Vector DB ระบบค้นหาคำตอบจากไฟล์ที่อัปโหลด ดึงข้อมูลจากฐานข้อมูล Vector มาตอบคำถาม **(ไม่ได้พัฒนา)**
+- [ ] Chat with Uploaded File Context **(ไม่ได้พัฒนา)**
 
-- [ ] File Upload รองรับการอัปโหลดไฟล์เอกสาร (PDF, Text) เพื่อเตรียมนำไปประมวลผล **(ไม่ได้พัฒนา)**
+- [ ] File Upload **(ไม่ได้พัฒนา)**
 
 - [x] Token Usage Counter แสดง token ที่ใช้ในแต่ละข้อความ
 
