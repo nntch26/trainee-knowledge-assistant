@@ -2,14 +2,14 @@ import { HttpError } from "@/types/api";
 import axios, { AxiosError } from "axios";
 
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 export async function createAxiosClient() {
-  if (!API_BASE_URL) throw new Error("Base URL is required");
+  if (!BASE_URL) throw new Error("Base URL is required");
 
     // สร้าง axios instance
     const client = axios.create({
-        baseURL: API_BASE_URL,
+        baseURL: BASE_URL,
         timeout: 15000, // 15 วินาที
         withCredentials: true, // ส่ง httpOnly cookie อัตโนมัติ
         headers: {

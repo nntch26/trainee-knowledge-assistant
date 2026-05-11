@@ -128,7 +128,8 @@ const createChat = async (req, res) => {
 // send message to chat
 const sendMessage = async (req, res) => {
   try {
-    const { message, chatPublicId } = req.body;
+    const chatPublicId = req.params.chatPublicId;
+    const { message } = req.body;
     const userId = req.user.id;
 
     if (!userId || !chatPublicId) {

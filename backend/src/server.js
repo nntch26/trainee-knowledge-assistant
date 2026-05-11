@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const prisma = require("./lib/prisma");
 
 // Import routes
 const authRoute = require("./routes/authRoute");
@@ -33,6 +34,17 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.get("/", (req, res) => {
     res.status(200).json({ message: "Backend API Running"});
+});
+
+// Health check endpoint
+app.get('/health', async (_, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ ok: true });
+    
+  } catch (err) {
+    res.status(500).json({ ok: false });
+  }
 });
 
 app.use("/api/auth", authRoute);

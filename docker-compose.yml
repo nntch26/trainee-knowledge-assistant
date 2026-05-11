@@ -13,7 +13,7 @@ services:
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
-      interval: 5s
+      interval: 5s # เช็คทุกกี่วินาที
       timeout: 5s
       retries: 5
       start_period: 10s
@@ -26,7 +26,9 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+    # รอให้ Postgres healthy ก่อน
+      postgres:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -36,8 +38,8 @@ services:
       - /app/node_modules            
       - ./backend/uploads:/app/uploads
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"] 
-      interval: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"] 
+      interval: 10s 
       timeout: 5s
       retries: 5
       start_period: 15s
@@ -48,17 +50,24 @@ services:
       context: ./frontend/chat-ai-app
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        API_BASE_URL: ${API_BASE_URL}
     container_name: web-app
     ports:
       - "3000:3000"
     depends_on:
-      # ปรับให้ Frontend รอจนกว่า Backend จะ healthy
+      # ให้ Frontend รอจน Backend healthy ก่อน
       backend:
         condition: service_healthy
     env_file:
       - .env
     environment:
       PORT: ${FRONTEND_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
 volumes:
   postgres_data:

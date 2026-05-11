@@ -51,7 +51,7 @@ export function RegisterForm() {
     }
 
     // ไป login page
-    router.push("/login");
+    router.replace("/login");
     
   };
 

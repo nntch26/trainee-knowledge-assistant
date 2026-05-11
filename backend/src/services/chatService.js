@@ -62,7 +62,7 @@ const generateResponse = async (userId, chatPublicId, userText ) => {
         const response = await geminiChat.sendMessage({ message: userText });
 
 
-        console.log("Response from Gemini:", response);    
+        // console.log("Response from Gemini:", response);    
         const replyText = response.text; // ดึงข้อความที่ AI ตอบกลับ
         const usage = response.usageMetadata; // ข้อมูลการใช้ token
     

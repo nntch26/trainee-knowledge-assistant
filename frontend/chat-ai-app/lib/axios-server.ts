@@ -4,10 +4,10 @@ import { HttpError } from "@/types/api";
 import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const BASE_URL = process.env.API_BASE_URL || "";
 
 export async function createServerAxiosClient() {
-  if (!API_BASE_URL) {
+  if (!BASE_URL) {
     throw new Error("Base URL is required");
   }
 
@@ -16,7 +16,7 @@ export async function createServerAxiosClient() {
 
    // สร้าง axios instance
     const server = axios.create({
-        baseURL: API_BASE_URL,
+        baseURL: BASE_URL,
         timeout: 15000,
         withCredentials: true,
         headers: {
@@ -24,6 +24,8 @@ export async function createServerAxiosClient() {
             Cookie: token ? `token=${token}` : "",
         },
     });
+
+    // console.log("axios server", server)
 
     server.interceptors.response.use(
          (response) => response,

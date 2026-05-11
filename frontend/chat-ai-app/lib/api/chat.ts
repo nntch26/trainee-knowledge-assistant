@@ -52,7 +52,9 @@ export async function sendMessageService(data:MessagePayload) {
 
   try {
       const axiosClient = await createAxiosClient();
-      const response = await axiosClient.post<SendMessageResponse>("/chat/message", data);
+      const response = await axiosClient.post<SendMessageResponse>(`/chat/${data.chatPublicId}/message`, {
+        message : data.message
+      });
 
       return response.data;
 

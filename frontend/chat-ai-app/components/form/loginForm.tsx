@@ -35,10 +35,12 @@ export function LoginForm() {
       setError("root", {
         message: "Invalid username or password",
       });
+      return;
     }
     
     // เด้งไปหน้าแชท
-    router.push("/chat");
+    router.replace("/chat");
+    router.refresh();
   };
 
   return (
