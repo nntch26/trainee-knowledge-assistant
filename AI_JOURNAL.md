@@ -74,7 +74,7 @@
 
 **My Adjustment:** นำโค้ด rate limit ไปเพิ่มใน route ที่เป็นส่งข้อความหา ai
 
-## Session 12: การเพิ่ม Docker Healthchec
+## Session 12: การเพิ่ม Docker Healthcheck
 **Prompt:** "Healthcheck ใน Docker Compose"
 
 **AI Response:** แนะนำการใช้ healthcheck เพื่อตรวจสอบว่า Backend และ Database พร้อมใช้งานหรือไม่ พร้อมโค้ดตัวอย่าง
