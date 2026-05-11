@@ -24,7 +24,7 @@
 
 #### AI Engine
 
-- [Google Gemini API (Generative AI)](https://ai.google.dev/) - ใช้โมเดลภาษาขนาดใหญ่ที่ฉลาดและรองรับภาษาไทยได้ดีเยี่ยม
+- [Google Gemini API (Generative AI)](https://ai.google.dev/) - ใช้โมเดลภาษาขนาดใหญ่ที่ฉลาด สำหรับตอบคำถามและค้นหาข้อมูล และรองรับภาษาไทยได้
  
 
 ## Setup & Run
@@ -95,14 +95,25 @@ docker compose up --build
 
 ## Architecture
 
-[brief architecture
+โปรเจกต์นี้แบ่งการทำงานออกเป็น 3 ส่วนหลัก ได้แก่ Frontend, Backend และ Database ซึ่งทำงานร่วมกันเพื่อให้ผู้ใช้สามารถสนทนากับ AI 
 
-description]
+#### Frontend (Next.js)
+
+ทำหน้าที่เป็นส่วนติดต่อผู้ใช้ (User Interface) สำหรับแสดงหน้าแชท ประวัติการสนทนา แสดงการใช้งาน Token และตรวจสอบสิทธิ์ผู้ใช้ในฝั่ง Client
+
+#### Backend (Express.js)
+
+ทำหน้าที่เป็น API Layer สำหรับจัดการ Business Logic ตรวจสอบความปลอดภัย และเชื่อมต่อกับ Google Gemini API
+เพื่อส่งข้อความไปให้ AI ประมวลผล
+
+#### Database (PostgreSQL+ Prisma ORM)
+
+ใช้จัดเก็บข้อมูล เช่น ข้อมูลผู้ใช้ ประวัติการสนทนา
 
  
 
 ## Known Issues
-
-[things you know are not great
-
-yet]
+- ปัจจุบันระบบยังคงเป็นระบบแชทพูดคุย ค้นหาข้อมูล ยังใช้ความรู้ทั่วไปจากโมเดล Gemini อยู่ ยังไม่ได้ดึงข้อมูลจากไฟล์ที่อัปโหลดมาตอบโดยตรง
+- Token Limit – ในเวอร์ชันฟรีของ Google Gemini API
+ มีข้อจำกัดด้าน Rate Limit ซึ่งอาจทำให้ไม่สามารถส่งคำขอได้ต่อเนื่อง
+- File Upload – ระบบอัปโหลดไฟล์ (PDF, TXT) และการดึงข้อมูลในไฟล์มาตอบคำถาม (RAG) ซึ่งได้ศึกษาไว้แล้ว แต่ยังไม่ได้มีการพัฒนา
