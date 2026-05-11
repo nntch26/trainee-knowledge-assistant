@@ -1,7 +1,7 @@
 
 # Knowledge Assistant
 
-ระบบ AI Chat ที่พัฒนาด้วย Next.js และ Express.js โดยใช้ Google Gemini AI เพื่อให้สามารถพูดคุยและตอบโต้ตอบได้อย่างมีประสิทธิภาพ
+ระบบ AI Chat ที่พัฒนาด้วย Next.js และ Express.js โดยใช้ Google Gemini AI เพื่อให้สามารถพูดคุยและค้นหาข้อมูลที่ต้องการได้อย่างรวดเร็วและมีประสิทธิภาพ
 
 ## Tech Stack
 
@@ -28,12 +28,56 @@
  
 
 ## Setup & Run
+ขั้นตอนรันโปรเจกต์
+    
+1. การเตรียมความพร้อมก่อนรัน
+ - ติดตั้ง Node.js (แนะนำ v18.x ขึ้นไป)
+ - ติดตั้ง Docker และ Docker Compose
+ - มี Google Gemini API Key (รับได้ที่ [Google AI Studio](https://ai.google.dev/))
 
-[1-command setup, e.g.
+2. การตั้งค่า **Environment Variables**
+สร้างไฟล์ `.env` จาก `.env.example` ไว้ในโฟลเดอร์หลัก (Root) โดยตั้งค่าตัวแปรดังนี้
 
-docker compose up]
+#### ฝั่ง Backend
+```
+# -------------- Backend --------------
+NODE_ENV=development
+BACKEND_PORT=8000
 
- 
+FRONTEND_URL=your_frontend_url 
+# http://localhost:3000
+
+# database
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_DB=your_database_name
+
+DATABASE_URL=postgresql://your_postgres_user:your_postgres_password@postgres:5432/your_database_name
+# postgresql://postgres:password@postgres:5432/mydb
+
+JWT_SECRET="ตั้งรหัสลับสำหรับ_JWT"
+
+# Gemini API key
+GEMINI_API_KEY="ใส่_API_KEY_ของคุณที่นี่"
+```
+
+#### ฝั่ง Frontend
+```
+# -------------- Frontend --------------
+NEXT_PUBLIC_API_URL=your_backend_url # http://localhost:8000/api
+API_BASE_URL=http://backend:8000/api # backend API endpoint
+
+FRONTEND_PORT=3000
+```
+
+3. เริ่มต้นใช้งานด้วย Docker
+วิธีนี้จะสามารถรันได้ทั้ง Database, Backend และ Frontend ให้พร้อมกันในคำสั่งเดียว
+
+``` 
+docker compose up --build
+```
+
+*เข้าใช้งานหน้าเว็บผ่าน Browser ที่ http://localhost:3000 และ Backend http://localhost:8000*
 
 ## Features Done
 
